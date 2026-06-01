@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<body class="hold-transition login-page">
+
+<div class="container-fluid d-flex justify-content-center align-items-center"
+     style="min-height:100vh;">
+
+    <div class="text-center">
+
+        <!-- Logo -->
+        <div class="image">
+            <img src="{% static 'dist/img/AdminLTELogo.png' %}"
+                 class="img-circle elevation-2 img-fluid"
+                 alt="piet Image"
+                 style="width:180px;
+                        height:180px;
+                        object-fit:cover;
+                        margin-bottom:10px;">
+        </div>
+
+        <!-- Title -->
+        <div class="login-logo mb-3">
+            <a href="{% url 'login' %}">
+                <b>AT College,Bhor</b><br>
+                Student Attendance Management System
+            </a>
+        </div>
+
+        <!-- Login Card -->
+        <div class="card" style="width:350px; margin:auto;">
+            <div class="card-body login-card-body">
+
+                <p class="login-box-msg">
+                    Sign in to Student Management System
+                </p>
+
+                <form action="{% url 'doLogin' %}" method="POST">
+                    {% csrf_token %}
+
+                    <!-- Email -->
+                    <div class="input-group mb-3">
+                        <input type="email"
+                               class="form-control"
+                               placeholder="Email"
+                               name="email">
+
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="input-group mb-3">
+                        <input type="password"
+                               class="form-control"
+                               placeholder="Password"
+                               name="password">
+
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Button -->
+                    <div class="col-12 p-0">
+                        <button type="submit"
+                                class="btn btn-primary btn-block">
+                            Sign In
+                        </button>
+                    </div>
+
+                    <!-- Messages -->
+                    {% if messages %}
+                    <div class="col-12">
+                        {% for message in messages %}
+                            {% if message.tags == "error" %}
+                            <div class="alert alert-danger alert-dismissible fade show"
+                                 role="alert"
+                                 style="margin-top:10px;">
+
+                                {{ message }}
+
+                                <button type="button"
+                                        class="close"
+                                        data-dismiss="alert"
+                                        aria-label="Close">
+
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="text-center pb-3">
+    <strong>
+        Copyright &copy; {% now "Y" %}
+        <a href="https://poornima.org">
+            Gokul Kumbhar
+        </a>
+    </strong>
+</footer>
+
+<!-- QR Script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+function generateQR() {
+    let data = "http://127.0.0.1:8000/mark-attendance/";
+
+    let qrContainer = document.getElementById("qr-image");
+    qrContainer.innerHTML = "";
+
+    new QRCode(qrContainer, {
+        text: data,
+        width: 200,
+        height: 200
+    });
+}
+</script>
+
+<script>
+function getCSRFToken() {
+    let cookies = document.cookie.split(';');
+
+    for (let cookie of cookies) {
+        let [name, value] = cookie.trim().split('=');
+
+        if (name === 'csrftoken')
+            return value;
+    }
+
+    return '';
+}
+</script>
+
+{% endblock %}
